@@ -15,11 +15,23 @@ class AnomalyDetector:
         try:
             df = pd.DataFrame(data)
             
-            # Drop non-numeric columns for anomaly detection
-            numeric_df = df.select_dtypes(include=[np.number])
+            # Convert columns to numeric, forcing non-numbers to NaN
+            for col in df.columns:
+                df[col] = pd.to_numeric(df[col], errors='coerce')
+            
+            # Keep only columns that have at least some valid numbers
+            numeric_df = df.dropna(axis=1, how='all')
+            # Fill any remaining internal NaNs with 0 to prevent IsolationForest from crashing
+            numeric_df = numeric_df.fillna(0)
             
             if numeric_df.empty:
-                return {"error": "No numeric data found to perform anomaly detection."}
+                return {
+                    "error": "No numeric data found to perform anomaly detection.",
+                    "debug_received_data_type": str(type(data)),
+                    "debug_received_data_length": len(data),
+                    "debug_received_first_row": data[0] if data else None,
+                    "debug_columns": list(df.columns),
+                }
             
             # Train and predict
             self.model.fit(numeric_df)
