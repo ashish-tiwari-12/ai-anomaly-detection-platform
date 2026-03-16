@@ -61,7 +61,7 @@ const Login = () => {
             type="submit"
             className="w-full py-3 px-4 bg-primary hover:bg-primaryHover text-white font-semibold rounded-xl shadow-lg shadow-primary/30 transition-all hover:scale-[1.02] active:scale-95 flex justify-center items-center gap-2"
           >
-            Sign In
+            Login
           </button>
         </form>
         <p className="text-center text-gray-400 mt-6 text-sm">
