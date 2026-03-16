@@ -16,13 +16,15 @@ const uploadDataset = async (req, res) => {
     }
 
     const results = [];
-    fs.createReadStream(req.file.path)
+    
+    // Import Readable for memory buffer processing
+    const { Readable } = require('stream');
+    const stream = Readable.from(req.file.buffer);
+
+    stream
       .pipe(csv())
       .on('data', (data) => results.push(data))
       .on('end', async () => {
-        // Remove file after reading
-        fs.unlinkSync(req.file.path);
-
         try {
           // Send to ML service
           const response = await axios.post(`${mlServiceUrl}/predict`, {

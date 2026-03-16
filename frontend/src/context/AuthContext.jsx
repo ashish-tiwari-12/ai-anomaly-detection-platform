@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
     delete axios.defaults.headers.common['Authorization'];
   }
 
-  const backendUrl = 'http://localhost:5000/api';
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000/api';
 
   useEffect(() => {
     const fetchUser = async () => {

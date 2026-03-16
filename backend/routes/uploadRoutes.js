@@ -6,23 +6,13 @@ const { uploadDataset } = require('../controllers/anomalyController');
 const path = require('path');
 const fs = require('fs');
 
-// Ensure uploads directory exists
-const uploadDir = 'uploads/';
-if (!fs.existsSync(uploadDir)){
-    fs.mkdirSync(uploadDir);
-}
+// Ensure uploads directory exists (Removed for Vercel/Serverless compatibility)
+// const uploadDir = 'uploads/';
+// if (!fs.existsSync(uploadDir)){
+//     fs.mkdirSync(uploadDir);
+// }
 
-const storage = multer.diskStorage({
-  destination(req, file, cb) {
-    cb(null, 'uploads/');
-  },
-  filename(req, file, cb) {
-    cb(
-      null,
-      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
-    );
-  },
-});
+const storage = multer.memoryStorage();
 
 function checkFileType(file, cb) {
   const filetypes = /csv|json/;
